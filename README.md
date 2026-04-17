@@ -44,3 +44,50 @@ FROM dataco_cleaned
 GROUP BY market
 ORDER BY profit_margin_pct DESC;
 ```
+
+#### 2. **Identifikasi Kebocoran Profit**
+Salah satu konsep penting yang saya pelajari dalam analisis profitabilitas adalah bahwa tidak semua pendapatan memberikan kontribusi positif yang sama. Masalah yang ingin saya pecahkan melalui data adalah fenomena "subsidi silang", di mana keuntungan dari pelanggan loyal mungkin habis terkikis oleh biaya melayani pelanggan yang tidak menguntungkan. Saya ingin menyelidiki: Bagaimana kita dapat mengidentifikasi segmen pelanggan yang secara sistematis memberikan dampak negatif terhadap profitabilitas perusahaan?
+##### The Strategy
+Untuk menjawab tantangan ini, saya mengeksplorasi penggunaan Window Functions seperti `NTILE(4)`. Langkah ini memungkinkan saya untuk melakukan segmentasi pelanggan ke dalam empat kuartil (Tiering) secara otomatis berdasarkan kontribusi profit mereka, sebuah teknik yang sangat efektif untuk mendeteksi profit leakage.
+```sql
+WITH customer_profitability AS (
+    SELECT
+        customer_id,
+        SUM(benefit_per_order) AS total_profit
+    FROM dataco_cleaned
+    GROUP BY customer_id
+), 
+customer_segments AS (
+    SELECT
+        customer_id,
+        total_profit,
+        NTILE(4) OVER (ORDER BY total_profit DESC) AS profitability_quartile
+    FROM customer_profitability
+)
+SELECT
+    profitability_quartile,
+    SUM(total_profit) AS segment_total_profit,
+    ROUND((SUM(total_profit) / NULLIF((SELECT SUM(total_profit) FROM customer_profitability), 0)) * 100, 2) AS pct_of_total_profit
+FROM customer_segments
+GROUP BY profitability_quartile
+ORDER BY profitability_quartile;
+```
+#### 3. **Audit Kebijakan Diskon (Correlation Analysis)**
+Pemberian diskon merupakan strategi yang umum digunakan untuk meningkatkan volume penjualan. Namun, sebagai seorang analis, saya perlu memahami batasan efektivitas dari strategi tersebut. Pertanyaan kritis yang saya ajukan adalah: Apakah terdapat ambang batas tertentu di mana pemberian diskon tidak lagi meningkatkan nilai bisnis, melainkan justru mengikis margin hingga ke titik kritis?
+##### The Strategy
+Saya mempelajari cara melakukan data bucketing menggunakan pernyataan CASE WHEN untuk mengategorikan tingkat diskon. Hal ini bertujuan untuk mengevaluasi korelasi antara besaran diskon dan rata-rata profitabilitas per pesanan, guna menentukan kategori diskon mana yang paling berisiko bagi kesehatan margin perusahaan.
+```sql
+SELECT
+    CASE
+        WHEN order_item_discount_rate = 0 THEN 'No Discount'
+        WHEN order_item_discount_rate <= 0.1 THEN 'Low Discount (0-10%)'
+        WHEN order_item_discount_rate <= 0.3 THEN 'Medium Discount (10-30%)'
+        ELSE 'High Discount (>30%)'
+    END AS discount_tier,
+    COUNT(*) AS total_orders,
+    SUM(benefit_per_order) AS total_profit,
+    ROUND(AVG(benefit_per_order), 2) AS avg_profit_per_order
+FROM dataco_cleaned
+GROUP BY discount_tier
+ORDER BY avg_profit_per_order DESC;
+```
