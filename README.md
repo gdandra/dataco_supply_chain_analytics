@@ -91,3 +91,11 @@ FROM dataco_cleaned
 GROUP BY discount_tier
 ORDER BY avg_profit_per_order DESC;
 ```
+### Interactive Dashboard Visualization
+Setelah melakukan pengolahan data di SQL, saya mentransformasikan hasilnya ke dalam **Power BI** untuk mendapatkan wawasan yang lebih interaktif.
+#### 1. **Page 1: Executive Financial Health Overview**
+!PhotoSlide1
+##### Summary
+#### 2. **Page 2: Profit Leakage & Behavioral Analysis**
+!PhotoSlide2
+##### Summary
