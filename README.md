@@ -94,8 +94,30 @@ ORDER BY avg_profit_per_order DESC;
 ### Interactive Dashboard Visualization
 Setelah melakukan pengolahan data di SQL, saya mentransformasikan hasilnya ke dalam **Power BI** untuk mendapatkan wawasan yang lebih interaktif.
 #### 1. **Page 1: Executive Financial Health Overview**
-!PhotoSlide1
+<img width="1295" height="730" alt="image" src="https://github.com/user-attachments/assets/8c809eb4-659c-42f4-8b4b-2e4156c099da" />
+
 ##### Summary
+Halaman ini berfungsi sebagai Financial Pulse perusahaan, memberikan pandangan makro terhadap kesehatan finansial DataCo secara global. Fokus utamanya adalah menyajikan metrik performa tingkat tinggi sebelum masuk ke analisis yang lebih granular.
+##### Strategic Insights & Visual Breakdown
+- **Baseline Performance (KPI Cards):** Visual ini menyajikan tiga metrik fundamental: Total Sales ($33.1M), Total Profit ($3.97M), dan Profit Margin (12%). Angka-angka ini menjadi tolok ukur utama untuk menilai apakah pertumbuhan volume penjualan berjalan beriringan dengan efisiensi profit.
+- **Operational Integrity (Status Realization):** Melalui Donut Chart, saya membedakan keuntungan berdasarkan status pesanan. Sekitar 51% profit telah terealisasi (Full Profit), sementara sisanya masih berupa Potential Profit (dalam proses). Hal ini penting untuk manajemen arus kas (cash flow) agar tidak mengambil keputusan strategis hanya berdasarkan angka di atas kertas.
+- **Market & Geographic Distribution:** Grafik batang menunjukkan bahwa pasar Europe dan LATAM adalah kontributor profit terbesar. Namun, dengan adanya visualisasi Top & Bottom 5 Countries, saya dapat mengidentifikasi anomali di mana beberapa negara justru memberikan margin negatif yang berisiko mengikis keuntungan dari wilayah produktif.
+- **Growth Trend & Data Integrity:** Grafik Sales and Profit Trend memperlihatkan stabilitas performa dari tahun 2015 hingga 2017.
+
+**Learning Note:** Sebagai bagian dari proses validasi data, saya mencatat adanya penurunan tajam pada Januari 2018. Hal ini diidentifikasi bukan sebagai kegagalan bisnis, melainkan sebagai data cut-off point (data bulan berjalan yang belum lengkap), yang merupakan temuan penting dalam menjaga integritas laporan.
 #### 2. **Page 2: Profit Leakage & Behavioral Analysis**
-!PhotoSlide2
+<img width="1287" height="730" alt="image" src="https://github.com/user-attachments/assets/0f613e88-e8c6-4c13-aaea-bda475652717" />
+
 ##### Summary
+Halaman ini merupakan tahap Investigasi Mendalam untuk menjawab pertanyaan yang muncul di halaman pertama. Fokus utamanya adalah mengidentifikasi sumber kebocoran profit (profit leakage) dan menganalisis korelasi antara kebijakan diskon dengan profitabilitas.
+##### Strategic Insights & Visual Breakdown
+- **The "Leakage" Indicators (Analytical KPIs):** Saya merancang metrik khusus untuk mengkuantifikasi kerugian. Angka -$1.08M (Total Net Loss Tier 4) dan Profit Erosion Rate 21.35% memberikan gambaran nyata seberapa besar keuntungan perusahaan "termakan" oleh segmen yang tidak efisien.
+- **Profit Contribution by Tier:** Menggunakan segmentasi kuartil yang dibuat di SQL, visual ini membuktikan bahwa sementara Tier 1 memberikan kontribusi masif, Tier 4 justru berada di area negatif. Ini menjadi bukti kuat perlunya evaluasi terhadap profil pelanggan di kelompok terbawah.
+- **Correlation Plot:** Melalui Scatter Plot, saya menemukan distribusi data yang mengkhawatirkan pada produk dengan diskon tinggi. Titik-titik yang berada di bawah garis referensi nol menunjukkan bahwa kebijakan diskon perusahaan sering kali melampaui ambang batas profitabilitas.
+- **Category Risk Mapping (Treemap):** Visualisasi ini memetakan di kategori produk mana kerugian paling banyak terkonsentrasi. Area berwarna merah pekat adalah prioritas utama untuk dilakukan peninjauan ulang struktur biaya atau strategi pricing.
+
+#### Interactive & Navigation Features
+Untuk meningkatkan pengalaman pengguna (User Experience) dalam menjelajahi data, saya menambahkan beberapa fitur interaktif yang saling terintegrasi di kedua halaman:
+- **Seamless Navigation:** Terdapat tombol "Profit" dan "Deep Dive" di bagian header yang memungkinkan pengguna berpindah konteks analisis (dari makro ke mikro) secara instan tanpa kehilangan alur berpikir.
+- **Global Multi-Slicers:** Saya menyediakan tiga slicer utama (Country, Market, Customer Type) yang telah dikonfigurasi menggunakan fitur Sync Slicers. Hal ini memastikan bahwa saat pengguna melakukan filter di satu halaman, kondisi data di halaman lainnya akan ikut menyesuaikan secara otomatis.
+- **One-Click Reset Button:** Saya mengimplementasikan tombol Reset Filter (ikon undo) menggunakan kombinasi Bookmarks dan Action Buttons. Fitur ini memungkinkan pengguna untuk mengembalikan seluruh tampilan dashboard ke kondisi awal (tanpa filter) hanya dengan satu klik, memberikan kemudahan dalam memulai eksplorasi data yang baru.
