@@ -75,7 +75,7 @@ ORDER BY profitability_quartile;
 #### 3. **Audit Kebijakan Diskon (Correlation Analysis)**
 Pemberian diskon merupakan strategi yang umum digunakan untuk meningkatkan volume penjualan. Namun, sebagai seorang analis, saya perlu memahami batasan efektivitas dari strategi tersebut. Pertanyaan kritis yang saya ajukan adalah: Apakah terdapat ambang batas tertentu di mana pemberian diskon tidak lagi meningkatkan nilai bisnis, melainkan justru mengikis margin hingga ke titik kritis?
 ##### The Strategy
-Saya mempelajari cara melakukan data bucketing menggunakan pernyataan CASE WHEN untuk mengategorikan tingkat diskon. Hal ini bertujuan untuk mengevaluasi korelasi antara besaran diskon dan rata-rata profitabilitas per pesanan, guna menentukan kategori diskon mana yang paling berisiko bagi kesehatan margin perusahaan.
+Saya mempelajari cara melakukan data bucketing menggunakan pernyataan ``CASE WHEN`` untuk mengategorikan tingkat diskon. Hal ini bertujuan untuk mengevaluasi korelasi antara besaran diskon dan rata-rata profitabilitas per pesanan, guna menentukan kategori diskon mana yang paling berisiko bagi kesehatan margin perusahaan.
 ```sql
 SELECT
     CASE
